@@ -7,7 +7,7 @@
 #SingleInstance force
 
 ;Entrada de Dados
-MsgBox "Atenção! Caso a galeria possua imagens +18 é necessário estar logado no DeviantArt pelo !!!INTERNET EXPLORER!!!!. Caso o contrário ocorrerá um erro no script"
+;MsgBox "Atenção! Caso a galeria possua imagens +18 é necessário estar logado no DeviantArt pelo !!!INTERNET EXPLORER!!!!. Caso o contrário ocorrerá um erro no script"
 InputBox galeriaDeviantArt, "Download de Galeria", "Insira o link da galeria: "
 InputBox caminhoDownload, "Destino da Imagem", "Insira o local aonde deseja salvar a imagem: "
 MsgBox "O script realizará o download de todas as imagens da galeria inserida, para encerrar o script a qualquer momento pressione Ctrl + X "
@@ -22,7 +22,14 @@ pwb.Navigate(galeriaDeviantArt) ;Vai pra página da galeria
 while pwb.busy or pwb.ReadyState != 4 ; Espera carregar
 	Sleep, 100
 
+while (pwb.document.getElementsByClassName("torpedo-thumb-link")[0].outerHTML ="")
+	Sleep, 200
+
 tamanhoGaleria := pwb.document.getElementsByClassName("torpedo-thumb-link").Length
+
+pwb.document.all.tags("div")[0].fireEvent("scroll")  ; Sometimes needed in conjunction with changing value
+
+
 
 i = 0
 
@@ -55,8 +62,13 @@ While i < tamanhoGaleria {
 	;Volta pra galeria, se preparando pra ir para a próxima imagem
 	pwb.navigate(galeriaDeviantArt)
 
+	pwb.document.all.tags("div")[0].fireEvent("scroll")
+
 	while pwb.busy or pwb.ReadyState != 4 ; CARREGUE! GALERIA!
 	Sleep, 100
+
+	while (pwb.document.getElementsByClassName("torpedo-thumb-link")[i].outerHTML ="")
+	Sleep, 200
 
 	i++
 
